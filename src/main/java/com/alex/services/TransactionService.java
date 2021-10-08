@@ -55,12 +55,11 @@ public class TransactionService {
     }
 
     public Mono<RestTransaction> getTransaction (Long id) {
-        return rxtx.execute(dbTx -> transactionRepository.findById(id)
+        return transactionRepository.findById(id)
                 .switchIfEmpty(Mono.error(new TransactionNotFoundException(id)))
                 .flatMap(tx -> orderRowRepository.findByTransactionId(tx.getId())
                     .collectList()
-                        .map(orders -> formatRestTransaction(tx, orders))))
-                .single();
+                        .map(orders -> formatRestTransaction(tx, orders)));
     }
 
     public Mono<RestTransaction> updateTransaction (UpdateTransactionRequest updatedTx, Long id) {
@@ -85,10 +84,10 @@ public class TransactionService {
     }
 
     public Mono<List<RestTransaction>> getAllTransactions() {
-        return rxtx.execute(dbTx -> transactionRepository.findAll()
+        return transactionRepository.findAll()
                 .flatMap(tx -> orderRowRepository.findByTransactionId(tx.getId())
                         .collectList()
-                        .map(orders -> formatRestTransaction(tx, orders))))
+                        .map(orders -> formatRestTransaction(tx, orders)))
                 .collectList();
     }
 

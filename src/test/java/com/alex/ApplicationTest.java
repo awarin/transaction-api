@@ -73,17 +73,20 @@ public class ApplicationTest {
         // Then the update should be performed
         assertThat(updateResponse.getBody().getStatus(), Matchers.is(TransactionStatus.CAPTURED));
 
+        // When adding a new transaction
         orderRows = new ArrayList<RestOrderRow>();
         orderRows.add(new RestOrderRow(1, BigDecimal.valueOf(208), "Vélo"));
 
-        // When the endpoint is called
         transaction = new NewTransactionRequest(BigDecimal.valueOf(208), orderRows, PaymentType.PAYPAL);
         response = restTemplate
                 .postForObject(transactionUri, transaction, RestTransaction.class);
         // Then the resulting transaction should be returned
         assertThat(response.getId(), Matchers.is(2L));
 
+        // When querying the list of transactions
         var allTransactions = restTemplate.getForObject(transactionUri, RestTransaction[].class);
+
+        // Then we should receive 2 transactions
         assertThat(allTransactions, Matchers.arrayWithSize(2));
     }
 }
