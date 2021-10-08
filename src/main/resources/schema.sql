@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS transactions (id SERIAL PRIMARY KEY, amount DECIMAL, status VARCHAR, payment_type VARCHAR, version INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS order_row (id SERIAL PRIMARY KEY, price DECIMAL, quantity INTEGER, name VARCHAR, transaction_id INTEGER);
